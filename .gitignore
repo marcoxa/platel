@@ -1,2 +1,7 @@
 *~
 *elc
+*.o
+*.dylib
+*.dll
+*.so
+
