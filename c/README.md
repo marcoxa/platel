@@ -1,6 +1,7 @@
 # platel `C` code
 
-This works only on Mac OS Sonoma (Intel; I don't have a M* available).
+This has been tested only on Mac OS Sonoma and Sequoia (Intel; I don't
+have a M* available), FTTB.
 
 You should be able to just run `make` and then move the
 `platel_emacs_module.dylyb` somewhere in `load-path`.
