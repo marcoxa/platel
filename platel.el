@@ -35,4 +35,4 @@
 
 (provide 'platel)
 
-;; platel.el ends here
+;;; platel.el ends here
