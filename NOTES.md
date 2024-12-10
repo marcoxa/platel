@@ -17,3 +17,6 @@ mind. YMMV, etc etc etc.
 Tested on Sequoia and it works as well.
 
 
+## 2024-12-04
+
+Started work to make code portable to UN*X (Linux) and Windows.
