@@ -25,11 +25,11 @@ if(${CMAKE_SYSTEM_NAME} STREQUAL "Darwin" AND
     "/Applications/Emacs.app/Contents/Resources/include")
   
 elseif(${CMAKE_SYSTEM_NAME} STREQUAL "Windows" AND
-    EXISTS "C:\\Program Files\\Emacs")
+    EXISTS "C:\\Program Files\\Emacs\\emacs-29.2\\include")
   ## We are on Windows with Emacs installed in a "standard" way.
   
   set(EMACS_MODULE_INCLUDE_DIR
-      "/Applications/Emacs.app/Contents/Resources/include")
+    "C:\\Program Files\\Emacs\\emacs-29.2\\include")
 endif()
 
 message(STATUS "EMACS include is '${EMACS_MODULE_INCLUDE_DIR}'")
