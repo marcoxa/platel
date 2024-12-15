@@ -1,5 +1,8 @@
 # CMakeLists.txt
 # Top file
+#
+# See the file COPYING in the top directory for copyright and
+# licensing information.
 
 cmake_minimum_required(VERSION 3.30)
 

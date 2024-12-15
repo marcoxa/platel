@@ -1,4 +1,7 @@
 ### Makefile
+###
+### See the file COPYING in the top directory for copyright and
+### licensing information.
 
 EMACS_MOD_PATH = /Applications/Emacs.app/Contents/Resources/include
 EMACS_MOD_OBJS = platel_emacs_module.o platel.o

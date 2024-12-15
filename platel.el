@@ -2,6 +2,9 @@
 ;;; platel --- Getting some more info about the underlying plaform.
 
 ;;; platel.el
+;;;
+;;; See the file COPYING in the top directory for copyright and
+;;; licensing information.
 
 
 ;;; Commentary:
@@ -31,7 +34,7 @@
 ;; (defun platel-is-little-endian ()
 ;;   "Returns non-NIL if we are running on a \"little endian\" architecture."
 ;;   t)
-  
+
 
 (provide 'platel)
 
