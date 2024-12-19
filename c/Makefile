@@ -23,6 +23,9 @@ platel_test: platel_test.c platel.o
 	$(CC) -o platel_test platel_test.c platel.o
 
 
+test: platel_test
+
+
 .PHONY: clean
 clean:
 	$(RM) $(EMACS_MOD_OBJS) platel_emacs_module.dylib platel_test
