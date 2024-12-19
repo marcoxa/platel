@@ -1,0 +1,45 @@
+### -*- Mode: Makefile -*-
+
+### platel.nmake
+###
+### MS Visual Studio nmake specification.
+###
+### See the file COPYING in the top directory for copyright and
+### licensing information.
+
+EMACS_MOD_PATH = "C:\\Program Files\\Emacs\\emacs-29.2\\include"
+EMACS_MOD_SRCS = platel_emacs_module.c platel.c
+EMACS_MOD_HDRS = platel_emacs_module.h platel.h
+EMACS_MOD_OBJS = $(EMACS_MOD_SRCS:.c.obj)
+
+
+### $(CC) should be 'cl'.
+
+all: platel_emacs_module_lib
+
+
+.PHONY: platel_emacs_module_lib
+platel_emacs_module_lib: $(EMACS_MOD_OBJS)
+	$(CC) /DL $(EMACS_MOD_OBJS) "/DLL:platel_emacs_module.dll"
+
+
+platel.obj: platel.h platel.c
+	$(CC) /C platel.c
+
+
+platel_emacs_module.obj: platel.h platel_emacs_module.c
+	$(CC) /C /I$(EMACS_MOD_PATH) platel_emacs_module.c
+
+
+platel_test: platel_test.c platel.obj
+	$(CC) platel_test.c platel.obj # 'cl' produces 'platel_test.exe' directly.
+
+
+test: platel_test
+
+
+.PHONY: clean
+clean:
+	$(RM) $(EMACS_MOD_OBJS) platel_emacs_module.dll platel_test
+
+### end of file -- platel.nmake
