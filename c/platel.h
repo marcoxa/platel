@@ -11,8 +11,17 @@
 
 #include <stdbool.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 extern bool platel_is_bigendian();
 extern bool platel_is_littleendian();
+
+#ifdef __cplusplus
+}
+#endif
+
 
 #endif /* _PLATEL_H */
 
