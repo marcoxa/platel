@@ -1,0 +1,15 @@
+/* -*- Mode: C -*- */
+
+/* platel_emacs_module.def
+ *
+ * See file COPYING in the top directory for copyright and licensing
+ * information.
+ *
+ * Exports definition file for MSVC Windows setup.
+ */
+
+LIBRARY "platel_emacs_module"
+EXPORTS plugin_is_GPL_compatible
+EXPORTS emacs_module_init
+
+/* end of file -- platel_emacs_module.def */
