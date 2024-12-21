@@ -11,6 +11,13 @@ cmake_minimum_required(VERSION 3.30)
 project(platel)
 
 
+### Set the C standard.
+
+set(CMAKE_C_STANDARD 99)
+set(CMAKE_C_STANDARD_REQUIRED True)
+
+
+
 ### Checking sytem/platform
 
 message(STATUS "System is '${CMAKE_SYSTEM_NAME}'")
@@ -48,26 +55,33 @@ message(STATUS "EMACS include is '${EMACS_MODULE_INCLUDE_DIR}'")
 
 ### Declaring targets.
 
+add_subdirectory(c)
+
+
 add_executable(platel_check c/platel_test.c)
 
-add_subdirectory(c)
 
 ### add_library(platel_emacs_module platel_emacs_module.c platel.c)
 
 target_link_libraries(platel_check PUBLIC platel_emacs_module)
 
-target_include_directories(platel_check PUBLIC
-  "${PROJECT_BINARY_DIR}"
-  ## "${PROJECT_SOURCE_DIR}/c"
-  "${EMACS_MODULE_INCLUDE_DIR}"
-)
-
-# target_include_directories(platel_emacs_module PUBLIC
+# target_include_directories(platel_check PUBLIC
 #   "${PROJECT_BINARY_DIR}"
 #   ## "${PROJECT_SOURCE_DIR}/c"
 #   "${EMACS_MODULE_INCLUDE_DIR}"
 # )
 
+# target_include_directories(platel_emacs_module PUBLIC
+#   "${PROJECT_BINARY_DIR}"
+#   "${PROJECT_SOURCE_DIR}/c"
+#   "${EMACS_MODULE_INCLUDE_DIR}"
+# )
+
+target_include_directories(platel_check PUBLIC
+  "${PROJECT_BINARY_DIR}"
+  "${PROJECT_SOURCE_DIR}/c"
+  "${EMACS_MODULE_INCLUDE_DIR}"
+)
 
 message(STATUS "PROJECT_BINARY_DIR   = ${PROJECT_BINARY_DIR}")
 message(STATUS "PROJECT_SOURCE_DIR/c = ${PROJECT_SOURCE_DIR}/c")

@@ -8,6 +8,7 @@ message(STATUS "C directory")
 
 ### The library that will contain the module.
 
+### add_library(platel_emacs_module SHARED platel_emacs_module.c platel.c)
 add_library(platel_emacs_module SHARED platel_emacs_module.c platel.c)
 
 ### add_library(platel_emacs_module MODULE platel_emacs_module.c platel.c)
@@ -18,13 +19,13 @@ add_library(platel_emacs_module SHARED platel_emacs_module.c platel.c)
 set_target_properties(platel_emacs_module PROPERTIES PREFIX "")
 
 
-### Set the include direcotry here.
+### Set the include directory here.
 
-target_include_directories(platel_emacs_module
-  INTERFACE
-  ${CMAKE_CURRENT_SOURCE_DIR}
-  ## "${EMACS_MODULE_INCLUDE_DIR}"
-)
+# target_include_directories(platel_emacs_module
+#   INTERFACE
+#   ${CMAKE_CURRENT_SOURCE_DIR}
+#   ## "${EMACS_MODULE_INCLUDE_DIR}"
+# )
 
 target_include_directories(platel_emacs_module
   PUBLIC
