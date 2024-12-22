@@ -8,7 +8,7 @@
 
 cmake_minimum_required(VERSION 3.30)
 
-project(platel)
+project(platel VERSION 0.42)
 
 
 ### Set the C standard.
@@ -16,6 +16,10 @@ project(platel)
 set(CMAKE_C_STANDARD 99)
 set(CMAKE_C_STANDARD_REQUIRED True)
 
+
+### Ensure that the .dll is completely built if we are on Windows.
+
+set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS True)
 
 
 ### Checking sytem/platform
@@ -65,11 +69,11 @@ add_executable(platel_check c/platel_test.c)
 
 target_link_libraries(platel_check PUBLIC platel_emacs_module)
 
-# target_include_directories(platel_check PUBLIC
-#   "${PROJECT_BINARY_DIR}"
-#   ## "${PROJECT_SOURCE_DIR}/c"
-#   "${EMACS_MODULE_INCLUDE_DIR}"
-# )
+target_include_directories(platel_check PUBLIC
+  "${PROJECT_BINARY_DIR}"
+  ## "${PROJECT_SOURCE_DIR}/c"
+  "${EMACS_MODULE_INCLUDE_DIR}"
+)
 
 # target_include_directories(platel_emacs_module PUBLIC
 #   "${PROJECT_BINARY_DIR}"
@@ -77,11 +81,11 @@ target_link_libraries(platel_check PUBLIC platel_emacs_module)
 #   "${EMACS_MODULE_INCLUDE_DIR}"
 # )
 
-target_include_directories(platel_check PUBLIC
-  "${PROJECT_BINARY_DIR}"
-  "${PROJECT_SOURCE_DIR}/c"
-  "${EMACS_MODULE_INCLUDE_DIR}"
-)
+# target_include_directories(platel_check PUBLIC
+#   "${PROJECT_BINARY_DIR}"
+#   "${PROJECT_SOURCE_DIR}/c"
+#   "${EMACS_MODULE_INCLUDE_DIR}"
+# )
 
 message(STATUS "PROJECT_BINARY_DIR   = ${PROJECT_BINARY_DIR}")
 message(STATUS "PROJECT_SOURCE_DIR/c = ${PROJECT_SOURCE_DIR}/c")
