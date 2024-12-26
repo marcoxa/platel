@@ -20,3 +20,12 @@ Tested on Sequoia and it works as well.
 ## 2024-12-04
 
 Started work to make code portable to UN*X (Linux) and Windows.
+
+
+## 2024-12-26
+
+Compiling and loading working on Mac OS, and, most likey, other UN*X
+(some more tweking necessary).  Manual compilation works also on
+Windows 11 with MS Visual Studio `nmake`.  `cmake` setup works form
+Mac OS and UN*X, but not yet for Windows 11.
+
