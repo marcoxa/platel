@@ -1,5 +1,5 @@
 ;;; -*- Mode: Emacs-Lisp; lexical-binding: t; -*-
-;;; platel --- Getting some more info about the underlying plaform.
+;;; platel --- Low level (C level) PLATform introspection with ELisp.
 
 ;;; platel.el
 ;;;
@@ -14,7 +14,7 @@
 ;;
 ;; Created: 2024-02-07
 ;;
-;; Version: 2024-12-19
+;; Version: 2024-12-23
 ;;
 ;; Keywords: languages, operating systems, binary platofrm.
 
@@ -61,15 +61,17 @@
 
 (defvar platel-*platel-emacs-module*
   (expand-file-name (concat "platel_emacs_module" module-file-suffix)
-		    platel-*platel-lib-dir*)
+		    platel-*platel-c-src-dir*) ; FTTB.  Fix the 'lib' business.
   "Platel Emacs Module file in local `lib` subdirectory.")
 
 
 (defun platel--emacs-module-exists ()
+  "Check whether the resulting emacs module library exists."
   (file-exists-p platel-*platel-emacs-module*))
 
 
 (cl-defun platel--build-emacs-module ()
+  "Build the `platel'  emacs module in a platform dependent way."
   (cl-flet ((do-compile (make-cmd)
 	      (with-temp-buffer
 		(let* ((default-directory platel-*platel-c-src-dir*)
@@ -102,12 +104,40 @@
 	    )				; cl-flet
     (unless (platel--emacs-module-exists)
       (cl-case system-type
-	(windows-nt (do-compile "nmake /F platel.nmale"))
+	(windows-nt (do-compile "nmake /F platel.nmake"))
        
-	(darwin (do-compile "make"))
+	(darwin (do-compile "make -f platel.make"))
 	
-	(t (do-compile "make"))
+	(t (do-compile "make -f platel.make"))
 	)))
+  )
+
+
+;; Exported functions.
+
+(defun platel-endiannes ()
+  "Show a message saying whether the current platform is little or big endian."
+  (interactive)
+  (if (platel-is-little-endian)
+      (message "PLATEL: platform is little endian.")
+    (message "PLATEL: platform is big endian.")
+    ))
+
+
+;; Emacs Module Compiling and loading.
+
+(eval-when-compile
+  (unless (or (fboundp 'platel-is-little-endian)
+	      (and (fboundp 'macroexp-compiling-p)
+		   (not (macroexp-compiling-p))))
+    (platel--build-emacs-module)
+    (load platel-*platel-emacs-module*)
+    ))
+
+
+(unless (fboundp 'platel-is-little-endian)
+  (platel--build-emacs-module)
+  (load platel-*platel-emacs-module*)
   )
 
     
