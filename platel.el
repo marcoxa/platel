@@ -14,7 +14,7 @@
 ;;
 ;; Created: 2024-02-07
 ;;
-;; Version: 2024-12-23
+;; Version: 2024-12-26
 ;;
 ;; Keywords: languages, operating systems, binary platofrm.
 
@@ -66,12 +66,12 @@
 
 
 (defun platel--emacs-module-exists ()
-  "Check whether the resulting emacs module library exists."
+  "Check whether the resulting Emacs module library exists."
   (file-exists-p platel-*platel-emacs-module*))
 
 
 (cl-defun platel--build-emacs-module ()
-  "Build the `platel'  emacs module in a platform dependent way."
+  "Build the `platel' Emacs module in a platform dependent way."
   (cl-flet ((do-compile (make-cmd)
 	      (with-temp-buffer
 		(let* ((default-directory platel-*platel-c-src-dir*)
@@ -82,11 +82,11 @@
 			)
 		       )
 		  (if (zerop exit-code)
-		      (message "PLATEL: compilation succeded.")
+		      (message "PLATEL: build succeded.")
 		    ;; Lifted from 'emacs-libpq'.
 		    (let ((result-msg (buffer-string)))
 		      (if noninteractive
-			  (message "PLATEL: compilation failed:\n%s\n"
+			  (message "PLATEL: build failed:\n%s\n"
 				   result-msg)
 			(with-current-buffer
 			    (get-buffer-create "*platel-compile*")
@@ -98,17 +98,23 @@
 			    (insert result-msg))
 			  (compilation-mode)
 			  (pop-to-buffer (current-buffer))
-			  (error "PLATEL: compilation of failed.")))
+			  (error "PLATEL: compilation of failed")))
 		      ))))
-		  )
+	      )
 	    )				; cl-flet
     (unless (platel--emacs-module-exists)
       (cl-case system-type
-	(windows-nt (do-compile "nmake /F platel.nmake"))
+	(windows-nt
+	 (message "PLATEL: building the platel Emacs module (Windows).")
+	 (do-compile "nmake /F platel.nmake"))
        
-	(darwin (do-compile "make -f platel.make"))
+	(darwin
+	 (message "PLATEL: building the platel Emacs module (Mac OS X - Darwin).")
+	 (do-compile "make -f platel-darwin.make"))
 	
-	(t (do-compile "make -f platel.make"))
+	(t
+	 (message "PLATEL: building the platel Emacs module (vanilla Unix/Linux).")
+	 (do-compile "make -f platel.make"))
 	)))
   )
 
