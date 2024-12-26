@@ -76,12 +76,12 @@ emacs_module_init(struct emacs_runtime * er) {
     
     emacs_value is_be_func =
       eenv->make_function(eenv, 0, 0, platel_e_is_big_endian,
-			  "Returns T if the current platform is big-endian.",
+			  "Return `T' if the current platform is big-endian.",
 			  NULL);
   
     emacs_value is_le_func =
       eenv->make_function(eenv, 0, 0, platel_e_is_little_endian,
-			  "Returns T if the current platform is little-endian.",
+			  "Return `T' if the current platform is little-endian.",
 			  NULL);
   
     emacs_value def_is_be_args[] = {is_be_symbol, is_be_func};
