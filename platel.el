@@ -7,27 +7,43 @@
 ;;; licensing information.
 
 ;; Author: Marco Antoniotti <marcoxa [at] gmail.com>
-;;
 ;; Maintainer: Marco Antoniotti <marcoxa [at] gmail.com>
 ;;
-;; Summary: Determine the content of a file (as per the `file' command).
+;; Summary: Low level (C level) PLATform introspection with ELisp.
 ;;
 ;; Created: 2024-02-07
+;; Version: 2024-12-27
 ;;
-;; Version: 2024-12-26
-;;
-;; Keywords: languages, operating systems, binary platofrm.
+;; Keywords: languages, operating systems, binary platform.
 
 
 ;;; Commentary:
 ;;
-;; Reach down to the C dungeon to get information abaot the current
-;; platform.
+;; Low level (C level) PLATform introspection with ELisp.
+;;
+;; That is, reach down to the C dungeon to get information about the
+;; current platform.
+;;
+;; This library is really an exercise in compiling and loading
+;; a *dynamic Emacs module* on one of the three main platforms: UN*X,
+;; Mac OS and Windows.  The library (either a `.so`, a `.dylib`, or a
+;; `.dll`) is compiles and loaded from the main `platel.el` file with
+;; everything kept in the `c` subdirectory.
+;;
+;; The library exports, for the time being, one command and two functions.
+;;
+;; * `platel-endianness': a command that shows a message saying whether
+;;   the current platform is little or big endian.
+;; * `platel-is-little-endian': a function that returns `T' if the current
+;;   platform is little-endian.
+;; * `platel-is-big-endian': a function that returns `T' if the current
+;;   platform is little-endian.
+
+
+;; Notes:
 ;;
 ;; The reason to do this?  There is NFW to check the endiannnes of the
-;; platform Emacs is running on.  And I want it.
-;;
-;; Notes:
+;; platform where Emacs is running on.  And I want it.
 ;;
 ;; 2024-02-09: Of course, I was not able to make the module machinery
 ;; work, so FTTB, this is just guesswork.  The two functions will
@@ -35,7 +51,7 @@
 ;;
 ;; 2024-12-02: The C module works.  Alas, "it works on my machine".
 ;; Now: to make it run and install on Windows *and* UN*X it is another
-;; can of worm, and it appears that the infrastructure to eventually
+;; can of worms, and it appears that the infrastructure to eventually
 ;; distribute this with elpa/melpa ain't quite there.  The following is
 ;; therefore kludgy,
 
@@ -70,7 +86,7 @@
   (file-exists-p platel-*platel-emacs-module*))
 
 
-(cl-defun platel--build-emacs-module ()
+(defun platel--build-emacs-module ()
   "Build the `platel' Emacs module in a platform dependent way."
   (cl-flet ((do-compile (make-cmd)
 	      (with-temp-buffer
@@ -83,7 +99,7 @@
 		       )
 		  (if (zerop exit-code)
 		      (message "PLATEL: build succeded.")
-		    ;; Lifted from 'emacs-libpq'.
+		    ;; The rest is somewhat lifted from 'emacs-libpq'.
 		    (let ((result-msg (buffer-string)))
 		      (if noninteractive
 			  (message "PLATEL: build failed:\n%s\n"
@@ -98,28 +114,41 @@
 			    (insert result-msg))
 			  (compilation-mode)
 			  (pop-to-buffer (current-buffer))
-			  (error "PLATEL: compilation of failed")))
+			  (error "PLATEL: build failed")))
 		      ))))
-	      )
+	      )				; do-compile
 	    )				; cl-flet
     (unless (platel--emacs-module-exists)
       (cl-case system-type
 	(windows-nt
-	 (message "PLATEL: building the platel Emacs module (Windows).")
+	 (message
+	  "PLATEL: building the platel Emacs module (Windows).")
 	 (do-compile "nmake /F platel.nmake"))
        
 	(darwin
-	 (message "PLATEL: building the platel Emacs module (Mac OS X - Darwin).")
+	 (message
+	  "PLATEL: building the platel Emacs module (Mac OS X - Darwin).")
 	 (do-compile "make -f platel-darwin.make"))
 	
 	(t
-	 (message "PLATEL: building the platel Emacs module (vanilla Unix/Linux).")
+	 (message
+	  "PLATEL: building the platel Emacs module (vanilla Unix/Linux).")
 	 (do-compile "make -f platel.make"))
-	)))
+	)
+      ))
   )
 
 
 ;; Exported functions.
+
+;; platel-is-little-endian
+;; platel-is-big-endian
+;; Defined in the dynamic module "c/platel_emacs_module.c.
+;; The `declare-function' is there to placate `flycheck'.
+
+(declare-function platel-is-little-endian nil)
+
+(declare-function platel-is-big-endian nil)
 
 (defun platel-endiannes ()
   "Show a message saying whether the current platform is little or big endian."
@@ -132,13 +161,17 @@
 
 ;; Emacs Module Compiling and loading.
 
-(eval-when-compile
-  (unless (or (fboundp 'platel-is-little-endian)
-	      (and (fboundp 'macroexp-compiling-p)
-		   (not (macroexp-compiling-p))))
-    (platel--build-emacs-module)
-    (load platel-*platel-emacs-module*)
-    ))
+;; MA 20241227: The `eval-when-compile' below is lifted from
+;; `emacs-libpq', but it seems a bit too much.  The `unless' below
+;; does the job.
+
+;; (eval-when-compile
+;;   (unless (or (fboundp 'platel-is-little-endian)
+;; 	      (and (fboundp 'macroexp-compiling-p)
+;; 		   (not (macroexp-compiling-p))))
+;;     (platel--build-emacs-module)
+;;     (load platel-*platel-emacs-module*)
+;;     ))
 
 
 (unless (fboundp 'platel-is-little-endian)
