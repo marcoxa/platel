@@ -2,11 +2,14 @@
 
 Low level (C level) PLATform introspection with ELisp.
 
+That is, reach down to the C dungeon to get information about the
+current platform.
+
 This library is really an exercise in compiling and loading
-a *dynamic Emacs module* on one of the three main platoforms: UN*X,
+a *dynamic Emacs module* on one of the three main platforms: UN*X,
 Mac OS and Windows.  The library (either a `.so`, a `.dylib`, or a
 `.dll`) is compiles and loaded from the main `platel.el` file with
-everything kept in the `c` subdirectory.
+everything kept in the `c` sub-directory.
 
 The library exports, for the time being, one command and two functions.
 
