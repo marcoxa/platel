@@ -86,6 +86,22 @@
   (file-exists-p platel-*platel-emacs-module*))
 
 
+(defun platel--emacs-version ()
+  "Return the Emacs version as \"MM.mm\".
+
+It depends on command `emacs-version'."
+  (let* ((emv (emacs-version))
+	 (em-maj-min-match
+	  (string-match "GNU Emacs \\([0-9]+\\).\\([0-9]+\\)" emv))
+	 )
+    (if em-maj-min-match
+	(concat (match-string 1 emv)
+		"."
+		(match-string 2 emv))
+      (error "PLATEL: cannot determine Emacs Major.minor version")
+      )))
+
+
 (defun platel--build-emacs-module ()
   "Build the `platel' Emacs module in a platform dependent way."
   (cl-flet ((do-compile (make-cmd)
@@ -118,25 +134,35 @@
 		      ))))
 	      )				; do-compile
 	    )				; cl-flet
-    (unless (platel--emacs-module-exists)
-      (cl-case system-type
-	(windows-nt
-	 (message
-	  "PLATEL: building the platel Emacs module (Windows).")
-	 (do-compile "nmake /F platel.nmake"))
-       
-	(darwin
-	 (message
-	  "PLATEL: building the platel Emacs module (Mac OS X - Darwin).")
-	 (do-compile "make -f platel-darwin.make"))
+    (let ((emacs-dir (concat "emacs-" (platel--emacs-version))))
+      (unless (platel--emacs-module-exists)
+	(cl-case system-type
+	  (windows-nt
+	   (message
+	    "PLATEL: building the platel Emacs module (Windows).")
+	   (do-compile (concat "nmake /F platel.nmake "
+			       "EMACS_VERSION_DIR="
+			       emacs-dir
+			       ))
+	   )
+	   
+	  (darwin
+	   (message
+	    "PLATEL: building the platel Emacs module (Mac OS X - Darwin).")
+	   (do-compile "make -f platel-darwin.make")
+	   )
 	
-	(t
-	 (message
-	  "PLATEL: building the platel Emacs module (vanilla Unix/Linux).")
-	 (do-compile "make -f platel.make"))
-	)
-      ))
-  )
+	  (t
+	   (message
+	    "PLATEL: building the platel Emacs module (vanilla Unix/Linux).")
+	   (do-compile (concat "make -f platel.make "
+			       "EMACS_VERSION_DIR="
+			       emacs-dir
+			       ))
+	   )
+	  )))				; cl-flet
+    )
+
 
 
 ;; Exported functions.

@@ -7,7 +7,8 @@
 ### See the file COPYING in the top directory for copyright and
 ### licensing information.
 
-EMACS_MOD_PATH = "C:\\Program Files\\Emacs\\emacs-29.2\\include"
+EMACS_VERSION_DIR = "emacs-29.2"
+EMACS_MOD_PATH = "C:\\Program Files\\Emacs\\$(EMACS_VERSION_DIR)\\include"
 EMACS_MOD_SRCS = platel_emacs_module.c platel.c
 EMACS_MOD_HDRS = platel_emacs_module.h platel.h
 EMACS_MOD_DEFS = platel_emacs_module.def
