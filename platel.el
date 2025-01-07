@@ -102,6 +102,12 @@ It depends on command `emacs-version'."
       )))
 
 
+(defvar platel--*msvc-folder*
+  "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\"
+  "The Microsoft Visual Studio 2022 Community standard location."
+  )
+
+
 (defun platel--build-emacs-module ()
   "Build the `platel' Emacs module in a platform dependent way."
   (cl-flet ((do-compile (make-cmd)
@@ -160,8 +166,9 @@ It depends on command `emacs-version'."
 			       emacs-dir
 			       ))
 	   )
-	  )))				; cl-flet
-    )
+	  )))
+    )				; cl-flet
+  )
 
 
 
