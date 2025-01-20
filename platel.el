@@ -12,7 +12,7 @@
 ;; Summary: Low level (C level) PLATform introspection with ELisp.
 ;;
 ;; Created: 2024-02-07
-;; Version: 2024-12-27
+;; Version: 2025-01-20
 ;;
 ;; Keywords: languages, operating systems, binary platform.
 
@@ -54,11 +54,17 @@
 ;; can of worms, and it appears that the infrastructure to eventually
 ;; distribute this with elpa/melpa ain't quite there.  The following is
 ;; therefore kludgy,
+;;
+;; 2025-01-20: Of course, working on this made me fall in another
+;; rabbit hole, where I dug out a simple library that allows us to
+;; invoke a 'make' toolchain (possibly a 'CMake' one) in a reasonalble
+;; way.  See the `require' for the 'emc' library.
 
 
 ;;; Code:
 
 (require 'cl-lib)
+(require 'emc)
 
 
 (defvar platel-path (file-name-directory (or load-file-name "."))
