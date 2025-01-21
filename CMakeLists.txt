@@ -65,6 +65,15 @@ add_subdirectory(c)
 add_executable(platel_check c/platel_test.c)
 
 
+### Declaring shared libraries destinations.
+
+set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}")
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}")
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}")
+
+option(BUILD_SHARED_LIBS "Build using shared libraries" ON)
+
+
 ### add_library(platel_emacs_module platel_emacs_module.c platel.c)
 
 target_link_libraries(platel_check PUBLIC platel_emacs_module)

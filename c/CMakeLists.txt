@@ -8,6 +8,8 @@ message(STATUS "C directory")
 
 ### The library that will contain the module.
 
+		      
+
 ### add_library(platel_emacs_module SHARED platel_emacs_module.c platel.c)
 add_library(platel_emacs_module SHARED platel_emacs_module.c platel.c)
 
@@ -17,6 +19,13 @@ add_library(platel_emacs_module SHARED platel_emacs_module.c platel.c)
 ### Ensure we do not add the 'lib' prefix.
 
 set_target_properties(platel_emacs_module PROPERTIES PREFIX "")
+
+
+# State that SqrtLibrary need PIC when the default is shared libraries.
+
+set_target_properties(platel_emacs_module PROPERTIES
+  POSITION_INDEPENDENT_CODE ${BUILD_SHARED_LIBS}
+  )
 
 
 ### Set the include directory here.
