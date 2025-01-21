@@ -12,7 +12,7 @@
 ;; Summary: Low level (C level) PLATform introspection with ELisp.
 ;;
 ;; Created: 2024-02-07
-;; Version: 2025-01-20
+;; Version: 2025-01-21
 ;;
 ;; Keywords: languages, operating systems, binary platform.
 
@@ -67,32 +67,34 @@
 (require 'emc)
 
 
-(defvar platel-path (file-name-directory (or load-file-name "."))
+(defvar platel:path (file-name-directory (or load-file-name "."))
   "The location PLATEL is loaded from.")
 
 
-(defvar platel-*platel-lib-dir*
+;; Unused FTTB.
+
+(defvar platel:*platel-lib-dir*
   (file-name-as-directory (expand-file-name "lib" platel-path))
   "The directory which will hold the Platel Emacs Module.")
 
 
-(defvar platel-*platel-c-src-dir*
+(defvar platel:*platel-c-src-dir*
   (file-name-as-directory (expand-file-name "c" platel-path))
   "The directory which holds the Platel Emacs Module C sources.")
 
 
-(defvar platel-*platel-emacs-module*
+(defvar platel:*platel-emacs-module*
   (expand-file-name (concat "platel_emacs_module" module-file-suffix)
 		    platel-*platel-c-src-dir*) ; FTTB.  Fix the 'lib' business.
   "Platel Emacs Module file in local `lib` subdirectory.")
 
 
-(defun platel--emacs-module-exists ()
+(defun plate::emacs-module-exists ()
   "Check whether the resulting Emacs module library exists."
   (file-exists-p platel-*platel-emacs-module*))
 
 
-(defun platel--emacs-version ()
+(defun platel::emacs-version ()
   "Return the Emacs version as \"MM.mm\".
 
 It depends on command `emacs-version'."
@@ -108,77 +110,114 @@ It depends on command `emacs-version'."
       )))
 
 
-(defvar platel--*msvc-folder*
-  "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\"
-  "The Microsoft Visual Studio 2022 Community standard location."
-  )
+;; (defvar platel--*msvc-folder*
+;;   "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\"
+;;   "The Microsoft Visual Studio 2022 Community standard location."
+;;   )
 
 
-(defun platel--build-emacs-module ()
-  "Build the `platel' Emacs module in a platform dependent way."
-  (cl-flet ((do-compile (make-cmd)
-	      (with-temp-buffer
-		(let* ((default-directory platel-*platel-c-src-dir*)
-		       (exit-code
-			(call-process-shell-command make-cmd
-						    nil
-						    t)
-			)
-		       )
-		  (if (zerop exit-code)
-		      (message "PLATEL: build succeded.")
-		    ;; The rest is somewhat lifted from 'emacs-libpq'.
-		    (let ((result-msg (buffer-string)))
-		      (if noninteractive
-			  (message "PLATEL: build failed:\n%s\n"
-				   result-msg)
-			(with-current-buffer
-			    (get-buffer-create "*platel-compile*")
-			  (let ((default-directory
-				 platel-*platel-c-src-dir*)
-				(inhibit-read-only t)
-				)
-			    (erase-buffer)
-			    (insert result-msg))
-			  (compilation-mode)
-			  (pop-to-buffer (current-buffer))
-			  (error "PLATEL: build failed")))
-		      ))))
-	      )				; do-compile
-	    )				; cl-flet
-    (let ((emacs-dir (concat "emacs-" (platel--emacs-version))))
-      (unless (platel--emacs-module-exists)
-	(cl-case system-type
-	  (windows-nt
-	   (message
-	    "PLATEL: building the platel Emacs module (Windows).")
-	   (do-compile (concat "nmake /F platel.nmake "
-			       "EMACS_VERSION_DIR="
-			       emacs-dir
-			       ))
-	   )
+;; (defun platel--build-emacs-module ()
+;;   "Build the `platel' Emacs module in a platform dependent way."
+;;   (cl-flet ((do-compile (make-cmd)
+;; 	      (with-temp-buffer
+;; 		(let* ((default-directory platel-*platel-c-src-dir*)
+;; 		       (exit-code
+;; 			(call-process-shell-command make-cmd
+;; 						    nil
+;; 						    t)
+;; 			)
+;; 		       )
+;; 		  (if (zerop exit-code)
+;; 		      (message "PLATEL: build succeded.")
+;; 		    ;; The rest is somewhat lifted from 'emacs-libpq'.
+;; 		    (let ((result-msg (buffer-string)))
+;; 		      (if noninteractive
+;; 			  (message "PLATEL: build failed:\n%s\n"
+;; 				   result-msg)
+;; 			(with-current-buffer
+;; 			    (get-buffer-create "*platel-compile*")
+;; 			  (let ((default-directory
+;; 				 platel-*platel-c-src-dir*)
+;; 				(inhibit-read-only t)
+;; 				)
+;; 			    (erase-buffer)
+;; 			    (insert result-msg))
+;; 			  (compilation-mode)
+;; 			  (pop-to-buffer (current-buffer))
+;; 			  (error "PLATEL: build failed")))
+;; 		      ))))
+;; 	      )				; do-compile
+;; 	    )				; cl-flet
+;;     (let ((emacs-dir (concat "emacs-" (platel--emacs-version))))
+;;       (unless (platel--emacs-module-exists)
+;; 	(cl-case system-type
+;; 	  (windows-nt
+;; 	   (message
+;; 	    "PLATEL: building the platel Emacs module (Windows).")
+;; 	   (do-compile (concat "nmake /F platel.nmake "
+;; 			       "EMACS_VERSION_DIR="
+;; 			       emacs-dir
+;; 			       ))
+;; 	   )
 	   
-	  (darwin
-	   (message
-	    "PLATEL: building the platel Emacs module (Mac OS X - Darwin).")
-	   (do-compile "make -f platel-darwin.make")
-	   )
+;; 	  (darwin
+;; 	   (message
+;; 	    "PLATEL: building the platel Emacs module (Mac OS X - Darwin).")
+;; 	   (do-compile "make -f platel-darwin.make")
+;; 	   )
 	
-	  (t
-	   (message
-	    "PLATEL: building the platel Emacs module (vanilla Unix/Linux).")
-	   (do-compile (concat "make -f platel.make "
-			       "EMACS_VERSION_DIR="
-			       emacs-dir
-			       ))
-	   )
-	  )))
-    )				; cl-flet
-  )
+;; 	  (t
+;; 	   (message
+;; 	    "PLATEL: building the platel Emacs module (vanilla Unix/Linux).")
+;; 	   (do-compile (concat "make -f platel.make "
+;; 			       "EMACS_VERSION_DIR="
+;; 			       emacs-dir
+;; 			       ))
+;; 	   )
+;; 	  )))
+;;     )				; cl-flet
+;;   )
 
+
+(defvar platel::*system-dependent-makefiles*
+  '((windows-nt . "platel.nmake")
+    (darwin     . "platel-darwin.make")
+    )
+  "An a-list containg associations between `system-type' and \"makefile\"s.")
+
+
+(defun platel::select-makefile ()
+  "Select the proper, platform-dependent \\='Makefile\\='."
+
+  (let ((mkf (assq system-type platel::*system-dependent-makefiles*)))
+    (if mkf (cl-rest mkf) "Makefile")))
+
+
+(cl-defun platel:build-emacs-module (&optional force)
+  "Build the `platel' Emacs module.
+
+The function checks whether the \\='platel\\=' Emacs module exists
+and, if not, builds it (using \\='emc\\='.  If FORCE is non-nil the
+Emacs module is forcibly rebuilt."
+  (let* ((emacs-dir (concat "emacs-" (platel::emacs-version)))
+	 (make-evd-macro (format "EMACS_VERSION_DIR=%S" emacs-dir))
+	 )
+    (if (platel::emcas-module-exists)
+	(when force
+	  (emc:make :build-dir "c"
+		    :makefile (platel::select-makefile)
+		    :targets "clean all"
+		    :make-macros make-evd-macro
+		    :wait t))
+      (emc:make :build-dir "c"
+		:makefile (platel::select-makefile)
+		:make-macros make-evd-macro
+		:wait t))
+    ))
 
 
 ;; Exported functions.
+;; -------------------
 
 ;; platel-is-little-endian
 ;; platel-is-big-endian
@@ -214,9 +253,10 @@ It depends on command `emacs-version'."
 
 
 (unless (fboundp 'platel-is-little-endian)
-  (platel--build-emacs-module)
-  (load platel-*platel-emacs-module*)
+  (platel:build-emacs-module)
   )
+
+(load platel:*platel-emacs-module*)
 
     
 ;;; Attic.
