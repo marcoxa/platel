@@ -94,22 +94,6 @@
   (file-exists-p platel-*platel-emacs-module*))
 
 
-(defun platel::emacs-version ()
-  "Return the Emacs version as \"MM.mm\".
-
-It depends on command `emacs-version'."
-  (let* ((emv (emacs-version))
-	 (em-maj-min-match
-	  (string-match "GNU Emacs \\([0-9]+\\).\\([0-9]+\\)" emv))
-	 )
-    (if em-maj-min-match
-	(concat (match-string 1 emv)
-		"."
-		(match-string 2 emv))
-      (error "PLATEL: cannot determine Emacs Major.minor version")
-      )))
-
-
 ;; (defvar platel--*msvc-folder*
 ;;   "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\"
 ;;   "The Microsoft Visual Studio 2022 Community standard location."
@@ -199,7 +183,7 @@ It depends on command `emacs-version'."
 The function checks whether the \\='platel\\=' Emacs module exists
 and, if not, builds it (using \\='emc\\='.  If FORCE is non-nil the
 Emacs module is forcibly rebuilt."
-  (let* ((emacs-dir (concat "emacs-" (platel::emacs-version)))
+  (let* ((emacs-dir (concat "emacs-" emacs-version))
 	 (make-evd-macro (format "EMACS_VERSION_DIR=%S" emacs-dir))
 	 )
     (if (platel::emcas-module-exists)
