@@ -3,6 +3,7 @@
 *.o
 *.dylib
 *.dll
+*.exp
 *.so
 tmp/*
 
