@@ -21,7 +21,7 @@ add_library(platel_emacs_module SHARED platel_emacs_module.c platel.c)
 set_target_properties(platel_emacs_module PROPERTIES PREFIX "")
 
 
-# State that SqrtLibrary need PIC when the default is shared libraries.
+# State that library needs PIC when the default is shared libraries.
 
 set_target_properties(platel_emacs_module PROPERTIES
   POSITION_INDEPENDENT_CODE ${BUILD_SHARED_LIBS}

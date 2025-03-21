@@ -17,6 +17,31 @@ set(CMAKE_C_STANDARD 99)
 set(CMAKE_C_STANDARD_REQUIRED True)
 
 
+### Emacs setup.
+
+set(EMACS_VERSION "29.2")
+
+# CMake 'execute_process' semantics requires "raw" strings passed to
+# the command processor.  Hence the two examples below don't work, but
+# the code does.
+# Three hours to figure this out!
+#
+# emacs -Q --batch [[--eval='(progn (princ emacs-version) emacs-version)']]
+# emacs -Q --batch "--eval='(princ emacs-version)'"
+
+
+execute_process(COMMAND emacs -Q --batch [[--eval=(princ emacs-version)]]
+  OUTPUT_VARIABLE EMACS_VERSION
+  # OUTPUT_FILE foobar.txt
+  # ERROR_FILE foobar.err
+  # ECHO_OUTPUT_VARIABLE
+  # ECHO_ERROR_VARIABLE
+  COMMAND_ERROR_IS_FATAL ANY
+)
+
+message(STATUS "EMACS_VERSION = |${EMACS_VERSION}|")
+
+
 ### Ensure that the .dll is completely built if we are on Windows.
 
 set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS True)
@@ -36,18 +61,18 @@ if(${CMAKE_SYSTEM_NAME} STREQUAL "Darwin" AND
     "/Applications/Emacs.app/Contents/Resources/include")
   
 elseif(${CMAKE_SYSTEM_NAME} STREQUAL "Windows" AND
-    EXISTS "C:\\Program Files\\Emacs\\emacs-29.2\\include")
+    EXISTS "C:\\Program Files\\Emacs\\emacs-${EMACS_VERSION}\\include")
   ## We are on Windows with Emacs installed in a "standard" way.
   
   set(EMACS_MODULE_INCLUDE_DIR
-    "C:\\Program Files\\Emacs\\emacs-29.2\\include")
+    "C:\\Program Files\\Emacs\\emacs-${EMACS_VERSION}\\include")
 
 elseif(${UNIX} AND
-    EXISTS "/usr/local/share/emacs/emacs-29.2/include")
+    EXISTS "/usr/local/share/emacs/emacs-${EMACS_VERSION}/include")
   ## We are on a UNI*X machine with Emacs installed in a "standard" way.
   
   set(EMACS_MODULE_INCLUDE_DIR
-    "/usr/local/share/emacs/emacs-29.2/include")
+    "/usr/local/share/emacs/emacs-${EMACS_VERSION}/include")
 
 else()
   message(FATAL_ERROR "Unknown system '${CMAKE_SYSTEM_NAME}'")
@@ -55,6 +80,13 @@ else()
 endif()
 
 message(STATUS "EMACS include is '${EMACS_MODULE_INCLUDE_DIR}'")
+
+
+### Global options.
+
+option(BUILD_SHARED_LIBS "Build using shared libraries" ON)
+
+message(STATUS "Building shared libraries: ${BUILD_SHARED_LIBS}")
 
 
 ### Declaring targets.
@@ -71,7 +103,7 @@ set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}")
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}")
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}")
 
-option(BUILD_SHARED_LIBS "Build using shared libraries" ON)
+
 
 
 ### add_library(platel_emacs_module platel_emacs_module.c platel.c)
