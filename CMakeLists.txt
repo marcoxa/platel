@@ -21,6 +21,7 @@ set(CMAKE_C_STANDARD_REQUIRED True)
 
 set(EMACS_VERSION "29.2")
 
+
 # CMake 'execute_process' semantics requires "raw" strings passed to
 # the command processor.  Hence the two examples below don't work, but
 # the code does.
@@ -28,7 +29,6 @@ set(EMACS_VERSION "29.2")
 #
 # emacs -Q --batch [[--eval='(progn (princ emacs-version) emacs-version)']]
 # emacs -Q --batch "--eval='(princ emacs-version)'"
-
 
 execute_process(COMMAND emacs -Q --batch [[--eval=(princ emacs-version)]]
   OUTPUT_VARIABLE EMACS_VERSION
@@ -39,7 +39,7 @@ execute_process(COMMAND emacs -Q --batch [[--eval=(princ emacs-version)]]
   COMMAND_ERROR_IS_FATAL ANY
 )
 
-message(STATUS "EMACS_VERSION = |${EMACS_VERSION}|")
+message(STATUS "Emacs version is '${EMACS_VERSION}'")
 
 
 ### Ensure that the .dll is completely built if we are on Windows.
@@ -93,7 +93,6 @@ message(STATUS "Building shared libraries: ${BUILD_SHARED_LIBS}")
 
 add_subdirectory(c)
 
-
 add_executable(platel_check c/platel_test.c)
 
 
@@ -102,8 +101,6 @@ add_executable(platel_check c/platel_test.c)
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}")
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}")
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}")
-
-
 
 
 ### add_library(platel_emacs_module platel_emacs_module.c platel.c)
