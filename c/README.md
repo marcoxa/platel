@@ -7,7 +7,7 @@ toolchain and `nmake`).
 You can manually test this code without loading `platel.el` from the
 top directory.
 
-The `cmake` setup works on UN*X, but yet on Windows.  It is left in
+The `cmake` setup works on UN*X, but not yet on Windows.  It is left in
 for future reference.
 
 On UN*X you should be able to just run `make -f platel.make` from this
@@ -25,6 +25,18 @@ Finally, issuing `M-x load-library` should work; and it does.  The
 functions `platel-is-big-endian` and `platel-is-little-endian` are now
 working as expected; you can test them in `ielm`.  The command
 `platel-endiannes` is also available from the top level `platel.el`
-file. 
+file.
+
+
+## `emc`
+
+While working with `platel` several ideas percolated to the library `emc`.
+
+Now you can call `emc:make` to build the system and `emc:install` to
+install it.  Eventually, you will be able to choose between build
+systems, e.g., `cmake` instead of the vanilla `Makefile` based setup.
+
+
+# Acknowledgements
 
 Thanks to Eli Zaretskii and the helpful Emacs developers crowd.

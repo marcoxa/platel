@@ -26,7 +26,7 @@ Started work to make code portable to UN*X (Linux) and Windows.
 
 Compiling and loading working on Mac OS, and, most likey, other UN\*X
 (some more tweaking necessary).  Manual compilation works also on
-Windows 11 with MS Visual Studio `nmake`.  `cmake` setup works form
+Windows 11 with MS Visual Studio `nmake`.  `cmake` setup works from
 Mac OS and UN*X, but not yet for Windows 11.
 
 
@@ -34,3 +34,8 @@ Mac OS and UN*X, but not yet for Windows 11.
 
 The library and the Emacs Module are now built using the `emc`
 library.
+
+
+## 2025-03-21
+
+Almost working `cmake` setup; changes required also for `emc`.
