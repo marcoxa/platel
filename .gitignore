@@ -1,8 +1,10 @@
 *~
 *elc
+*.saved
 *.o
 *.dylib
 *.dll
+*.lib
 *.exp
 *.so
 tmp/*
