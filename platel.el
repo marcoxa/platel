@@ -208,9 +208,9 @@ Emacs module is forcibly rebuilt."
 ;; Defined in the dynamic module "c/platel_emacs_module.c.
 ;; The `declare-function' is there to placate `flycheck'.
 
-(declare-function platel:is-little-endian nil)
+(declare-function platel:is-little-endian nil ())
 
-(declare-function platel:is-big-endian nil)
+(declare-function platel:is-big-endian nil ())
 
 (defun platel:endianness ()
   "Show a message saying whether the current platform is little or big endian."
