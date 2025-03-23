@@ -9,8 +9,10 @@ current platform.
 This library is really an exercise in compiling and loading
 a *dynamic Emacs module* on one of the three main platforms: UN\*X,
 Mac OS and Windows.  The library (either a `.so`, a `.dylib`, or a
-`.dll`) is compiles and loaded from the main `platel.el` file with
-everything kept in the `c` sub-directory.
+`.dll`) can either be manually compiled and `load`ed in a running
+Emacs, or can be compiled and loaded from the main `platel.el` file using
+the [`emc`](https://github.com/marcoxa/emc) Emacs library. All the
+supporting code is kept in the `c` sub-directory.
 
 The library exports, for the time being, one command and two functions.
 
@@ -44,8 +46,8 @@ As a result, `platel` can be built "manually" in two ways.
 1. Use a three flavors of `Makefile`.
 2. Use [`cmake`](https://cmake.org).
 
-Moreover, `platel` can be - automatically - (re)built directly from
-Emacs using the `emc` library.
+As previosly stated, `platel` can be - automatically - (re)built
+directly from Emacs using the `emc` library.
 
 Choose what you prefer.
 
