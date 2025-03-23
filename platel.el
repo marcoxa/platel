@@ -186,7 +186,7 @@ Emacs module is forcibly rebuilt."
   (let* ((emacs-dir (concat "emacs-" emacs-version))
 	 (make-evd-macro (format "EMACS_VERSION_DIR=%S" emacs-dir))
 	 )
-    (if (platel::emcas-module-exists)
+    (if (platel::emacs-module-exists)
 	(when force
 	  (emc:make :build-dir "c"
 		    :makefile (platel::select-makefile)
@@ -208,14 +208,14 @@ Emacs module is forcibly rebuilt."
 ;; Defined in the dynamic module "c/platel_emacs_module.c.
 ;; The `declare-function' is there to placate `flycheck'.
 
-(declare-function platel-is-little-endian nil)
+(declare-function platel:is-little-endian nil)
 
-(declare-function platel-is-big-endian nil)
+(declare-function platel:is-big-endian nil)
 
-(defun platel-endiannes ()
+(defun platel:endianness ()
   "Show a message saying whether the current platform is little or big endian."
   (interactive)
-  (if (platel-is-little-endian)
+  (if (platel:is-little-endian)
       (message "PLATEL: platform is little endian.")
     (message "PLATEL: platform is big endian.")
     ))
@@ -236,7 +236,7 @@ Emacs module is forcibly rebuilt."
 ;;     ))
 
 
-(unless (fboundp 'platel-is-little-endian)
+(unless (fboundp 'platel:is-little-endian)
   (platel:build-emacs-module)
   )
 
