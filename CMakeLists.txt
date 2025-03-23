@@ -1,5 +1,5 @@
 ### CMakeLists.txt
-### Top file
+### platel top cmake file.
 ###
 ### See the file COPYING in the top directory for copyright and
 ### licensing information.
@@ -19,7 +19,7 @@ set(CMAKE_C_STANDARD_REQUIRED True)
 
 ### Emacs setup.
 
-set(EMACS_VERSION "29.2")
+set(EMACS_VERSION 29.2)
 
 
 # CMake 'execute_process' semantics requires "raw" strings passed to
@@ -32,10 +32,6 @@ set(EMACS_VERSION "29.2")
 
 execute_process(COMMAND emacs -Q --batch [[--eval=(princ emacs-version)]]
   OUTPUT_VARIABLE EMACS_VERSION
-  # OUTPUT_FILE foobar.txt
-  # ERROR_FILE foobar.err
-  # ECHO_OUTPUT_VARIABLE
-  # ECHO_ERROR_VARIABLE
   COMMAND_ERROR_IS_FATAL ANY
 )
 
@@ -58,21 +54,21 @@ if(${CMAKE_SYSTEM_NAME} STREQUAL "Darwin" AND
   ## installed by, e.g., homebrew from 'https://emacsformacosx.com/'
   
   set(EMACS_MODULE_INCLUDE_DIR
-    "/Applications/Emacs.app/Contents/Resources/include")
+    "/Applications/Emacs.app/Contents/Resources/include/")
   
 elseif(${CMAKE_SYSTEM_NAME} STREQUAL "Windows" AND
-    EXISTS "C:\\Program Files\\Emacs\\emacs-${EMACS_VERSION}\\include")
+    EXISTS "C:\\Program Files\\Emacs\\emacs-${EMACS_VERSION}\\include\\")
   ## We are on Windows with Emacs installed in a "standard" way.
   
   set(EMACS_MODULE_INCLUDE_DIR
-    "C:\\Program Files\\Emacs\\emacs-${EMACS_VERSION}\\include")
+    "C:\\Program Files\\Emacs\\emacs-${EMACS_VERSION}\\include\\")
 
 elseif(${UNIX} AND
-    EXISTS "/usr/local/share/emacs/emacs-${EMACS_VERSION}/include")
+    EXISTS "/usr/local/share/emacs/emacs-${EMACS_VERSION}/include/")
   ## We are on a UNI*X machine with Emacs installed in a "standard" way.
   
   set(EMACS_MODULE_INCLUDE_DIR
-    "/usr/local/share/emacs/emacs-${EMACS_VERSION}/include")
+    "/usr/local/share/emacs/emacs-${EMACS_VERSION}/include/")
 
 else()
   message(FATAL_ERROR "Unknown system '${CMAKE_SYSTEM_NAME}'")
@@ -93,7 +89,9 @@ message(STATUS "Building shared libraries: ${BUILD_SHARED_LIBS}")
 
 add_subdirectory(c)
 
-add_executable(platel_check c/platel_test.c)
+add_library(platel_obj OBJECT c/platel.c)
+
+add_executable(platel_test c/platel_test.c $<TARGET_OBJECTS:platel_obj>)
 
 
 ### Declaring shared libraries destinations.
@@ -102,33 +100,28 @@ set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}")
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}")
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}")
 
+target_link_libraries(platel_test PUBLIC platel_obj)
 
-### add_library(platel_emacs_module platel_emacs_module.c platel.c)
+target_include_directories(platel_test PUBLIC "${PROJECT_BINARY_DIR}")
 
-target_link_libraries(platel_check PUBLIC platel_emacs_module)
 
-target_include_directories(platel_check PUBLIC
-  "${PROJECT_BINARY_DIR}"
-  ## "${PROJECT_SOURCE_DIR}/c"
-  "${EMACS_MODULE_INCLUDE_DIR}"
-)
+### Installation instructions.
+### Installing in the top directory, i.e., PROJECT_SOURCE_DIR.
 
-# target_include_directories(platel_emacs_module PUBLIC
-#   "${PROJECT_BINARY_DIR}"
-#   "${PROJECT_SOURCE_DIR}/c"
-#   "${EMACS_MODULE_INCLUDE_DIR}"
-# )
+install(TARGETS platel_test DESTINATION ${PROJECT_SOURCE_DIR})
 
-# target_include_directories(platel_check PUBLIC
-#   "${PROJECT_BINARY_DIR}"
-#   "${PROJECT_SOURCE_DIR}/c"
-#   "${EMACS_MODULE_INCLUDE_DIR}"
-# )
 
+### Epilogue.
+
+message(STATUS "CMAKE_BINARY_DIR   = ${CMAKE_BINARY_DIR}")
+message(STATUS "CMAKE_SOURCE_DIR   = ${CMAKE_SOURCE_DIR}")
 message(STATUS "PROJECT_BINARY_DIR   = ${PROJECT_BINARY_DIR}")
 message(STATUS "PROJECT_SOURCE_DIR/c = ${PROJECT_SOURCE_DIR}/c")
 message(STATUS "EMACS_MODULE_INCLUDE_DIR = ${EMACS_MODULE_INCLUDE_DIR}")
+message(STATUS "CMAKE_INSTALL_PREFIX = ${CMAKE_INSTALL_PREFIX}")
+message(STATUS "CMAKE_INCLUDE_PATH = ${CMAKE_INCLUDE_PATH}")
+message(STATUS "CMAKE_LIBRARY_PATH = ${CMAKE_LIBRARY_PATH}")
+message(STATUS "CMAKE_PREFIX_PATH  = ${CMAKE_PREFIX_PATH}")
 
-    
+
 ### CMakeLists.txt ends here.
-    

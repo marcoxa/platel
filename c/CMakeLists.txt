@@ -1,16 +1,17 @@
 ### CMakeLists.txt
+### platel C source cmake file.
 ###
 ### See the file COPYING in the top directory for copyright and
 ### licensing information.
 
 
-message(STATUS "C directory")
+# Prologue.
+
+message(STATUS "")
+message(STATUS "C directory...")
 
 ### The library that will contain the module.
 
-		      
-
-### add_library(platel_emacs_module SHARED platel_emacs_module.c platel.c)
 add_library(platel_emacs_module SHARED platel_emacs_module.c platel.c)
 
 ### add_library(platel_emacs_module MODULE platel_emacs_module.c platel.c)
@@ -38,16 +39,21 @@ set_target_properties(platel_emacs_module PROPERTIES
 
 target_include_directories(platel_emacs_module
   PUBLIC
-  ## "${PROJECT_BINARY_DIR}"
-  ## "${PROJECT_SOURCE_DIR}/c"
   "${EMACS_MODULE_INCLUDE_DIR}"
 )
 
 
-### Epilogue
+### Installation instructions.
+### Installing in the top directory, i.e., PROJECT_SOURCE_DIR.
+
+install(TARGETS platel_emacs_module DESTINATION ${PROJECT_SOURCE_DIR})
+
+
+### Epilogue.
 
 message(STATUS "C PROJECT_BINARY_DIR   = ${PROJECT_BINARY_DIR}")
 message(STATUS "C PROJECT_SOURCE_DIR/c = ${PROJECT_SOURCE_DIR}/c")
 message(STATUS "C EMACS_MODULE_INCLUDE_DIR = ${EMACS_MODULE_INCLUDE_DIR}")
+message(STATUS "")
 
 ### CMakeLists.txt ends here
