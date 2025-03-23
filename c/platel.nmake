@@ -7,33 +7,61 @@
 ### See the file COPYING in the top directory for copyright and
 ### licensing information.
 
-EMACS_VERSION_DIR = "emacs-29.2"
-EMACS_MOD_PATH = "C:\\Program Files\\Emacs\\$(EMACS_VERSION_DIR)\\include"
+
+## Environment setup.
+## 'nmake' is rahter limited in its treatment of variables, therefore
+## I assume that some of the following macros (e.g., EMACS_VERSION)
+## will be defined at 'namke' invocation time.
+
+## The following should be self-explanatory.
+## EMACS_MOD_LOAD_PATH is the "installation" folder, which in this
+## case just the main, top 'platel' folder, preparing for 'm?elpa'
+
+EMACS_VERSION = 29.2
+EMACS_VERSION_DIR = "emacs-$(EMACS_VERSION)"
+EMACS_MOD_INCLUDE = "C:\\Program Files\\Emacs\\$(EMACS_VERSION_DIR)\\include\\"
+EMACS_MOD_LOAD_PATH = "..\\"
+
 EMACS_MOD_SRCS = platel_emacs_module.c platel.c
 EMACS_MOD_HDRS = platel_emacs_module.h platel.h
 EMACS_MOD_DEFS = platel_emacs_module.def
 EMACS_MOD_OBJS = $(EMACS_MOD_SRCS:.c=.obj)
 EMACS_MOD_LIBS = $(EMACS_MOD_SRCS:.c=.lib)
 EMACS_MOD_EXPS = $(EMACS_MOD_SRCS:.c=.exp)
+EMACS_MOD_DLL  = platel_emacs_module.dll
 
 
-### $(CC) should be 'cl'.
+### $(CC) is 'cl'.
 
 CFLAGS=/TC /nologo
 
-### $(RM)
+
+### $(RM), $(COPY) and $(MOVE) are not defined in 'nmake'.
 
 RM = del
+COPY = copy
+MOVE = ren
 
-all: platel_emacs_module_lib
+
+### Targets.
+
+all: start $(EMACS_MOD_DLL)
+	@echo platel make: 'platel' building done.
+	@echo.
 
 
-platel_emacs_module_lib: $(EMACS_MOD_OBJS) $(EMACS_MOD_DEFS)
+start:
+	@echo platel make: 'platel' building started...
+	@echo platel make: MAKEDIR = $(MAKEDIR)
+	@echo.
+
+
+$(EMACS_MOD_DLL): $(EMACS_MOD_OBJS) $(EMACS_MOD_DEFS)
 	$(CC) /nologo \
               /LD $(EMACS_MOD_OBJS) $(EMACS_MOD_DEFS) \
-              /DLL:platel_emacs_module.dll \
+              /DLL:$(EMACS_MOD_DLL) \
               /link \
-                /OUT:platel_emacs_module.dll
+                /OUT:$(EMACS_MOD_DLL)
 
 
 platel.obj: platel.h platel.c
@@ -41,7 +69,7 @@ platel.obj: platel.h platel.c
 
 
 platel_emacs_module.obj: platel.h platel_emacs_module.c
-	$(CC) $(CFLAGS) /c /I$(EMACS_MOD_PATH) platel_emacs_module.c
+	$(CC) $(CFLAGS) /c /I$(EMACS_MOD_INCLUDE) platel_emacs_module.c
 
 
 ### 'cl' produces 'platel_test.exe' directly.
@@ -53,11 +81,23 @@ platel_test: platel_test.c platel.obj
 test: platel_test
 
 
+install: $(EMACS_MOD_DLL)
+	- $(COPY) /y $(EMACS_MOD_DLL) $(EMACS_MOD_LOAD_PATH)
+	@echo platel make: $(EMACS_MOD_DLL) installed in $(EMACS_MOD_LOAD_PATH).
+	@echo.
+
+
+uninstall: clean
+	- $(RM) $(EMACS_MOD_LOAD_PATH)$(EMACS_MOD_DLL)
+	@echo platel make: 'platel' cleaned and uninstalled.
+	@echo.
+
+
 clean:
 	- $(RM) $(EMACS_MOD_OBJS)
 	- $(RM) $(EMACS_MOD_EXPS)
 	- $(RM) $(EMACS_MOD_LIBS)
-	- $(RM) platel_emacs_module.dll
+	- $(RM) $(EMACS_MOD_DLL)
 	- $(RM) platel_test.exe platel_test.obj
 
 ### end of file -- platel.nmake
