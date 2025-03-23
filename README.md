@@ -47,6 +47,8 @@ As a result, `platel` can be built "manually" in two ways.
 Moreover, `platel` can be - automatically - (re)built directly from
 Emacs using the `emc` library.
 
+Choose what you prefer.
+
 To start, note that the actual Emacs module code in the the **c**
 sub-directory.  Apart from the `CMakeLists.txt` file which will be used
 for the `cmake` building process, there are a few **`make`** files.
@@ -159,13 +161,34 @@ Invoking the following will clean up the installation.
 </pre>
 
 
+### Running `platel`
+
+If you have `load`ed the `platel_emacs_module` in your Emacs session,
+now you can issue the command `platel:endianness`.  On an Intel
+machine you will see the following message in the minibuffer.
+```
+    PLATEL: platform is little endian.
+```
+
+The functions `platel:is-big-endian` and `platel:is-little-endian`
+will also be available for ELisp programming.
+
+
+### Caveats
+
+There is currently (March 2025) no way to easily *unload* a module
+from a running Emacs, according to the current documentation.
+Re-installing and even uninstalling `platel` may not work, unless you
+restart your Emacs first.
+
+
 Conclusion
 ==========
 
 All in all, this exercise falls in the catogory of "let me just add a
 small feature to Emacs".  The result being the construction of several
-supporting pieces of code and the learing of several tools and their
-idioti... idiosyncrasies (cf., `cmake` and `nmake`).
+supporting pieces of code and the learning of several tools and their
+idioc... idiosyncrasies (cf., `cmake` and `nmake`).
 
 It has bee a trip.  Yes, it has been a waste of time, but seriously:
 if you are reading this, admit it!  You would have done the same.
