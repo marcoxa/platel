@@ -39,3 +39,12 @@ library.
 ## 2025-03-21
 
 Almost working `cmake` setup; changes required also for `emc`.
+
+
+## 2025-03-25
+
+Reworked `nmake` support.  Now the module (`.dll`) compilation and
+loading works, modulo the problem of unloading the module itself from
+a running Emacs.  Installing and uninstalling using the `nmake`targets
+will print out error messages if the module is loaded in a a running
+emacs.
