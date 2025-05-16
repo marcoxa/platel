@@ -1,7 +1,7 @@
 platel
 ======
 
-Low level (C level) **PLAT**form introspection with **EL**isp.
+Low level (**C** level) **PLAT**form introspection with **EL**isp.
 
 That is, reach down to the C dungeon to get information about the
 current platform.
@@ -43,7 +43,7 @@ powerful motivators.
 
 As a result, `platel` can be built "manually" in two ways.
 
-1. Use a three flavors of `Makefile`.
+1. Use three flavors of `Makefile`.
 2. Use [`cmake`](https://cmake.org).
 
 As previosly stated, `platel` can be - automatically - (re)built
@@ -135,8 +135,8 @@ To build and install on Windows just issue:
 
 Of course, this assumes that you have started `cmd` or **Power Shell**
 from the proper [**MSVC**](https://visualstudio.microsoft.com/)
-startup item, in order to have the overall Visual Studio completely
-setup.
+startup item, in order to have the overall Visual Studio environment
+completely setup (which is what `emc` provides for you on Windows).
 
 As before, the `install` target starts the building as weel, so you really just
 need the last command.
@@ -159,7 +159,7 @@ Note that the Windows build process creates also `.exp` and `.lib`
 Invoking the following will clean up the installation.
 
 <pre>
-    W:\Path\to\platel\c> <b>make -f platel.make uninstall</b>
+    W:\Path\to\platel\c> <bn>make /F platel.nmake uninstall</b>
 </pre>
 
 
