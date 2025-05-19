@@ -74,24 +74,24 @@
 ;; Unused FTTB.
 
 (defvar platel:*platel-lib-dir*
-  (file-name-as-directory (expand-file-name "lib" platel-path))
+  (file-name-as-directory (expand-file-name "lib" platel:path))
   "The directory which will hold the Platel Emacs Module.")
 
 
 (defvar platel:*platel-c-src-dir*
-  (file-name-as-directory (expand-file-name "c" platel-path))
+  (file-name-as-directory (expand-file-name "c" platel:path))
   "The directory which holds the Platel Emacs Module C sources.")
 
 
 (defvar platel:*platel-emacs-module*
   (expand-file-name (concat "platel_emacs_module" module-file-suffix)
-		    platel-*platel-c-src-dir*) ; FTTB.  Fix the 'lib' business.
+		    platel:*platel-c-src-dir*) ; FTTB.  Fix the 'lib' business.
   "Platel Emacs Module file in local `lib` subdirectory.")
 
 
-(defun plate::emacs-module-exists ()
+(defun platel::emacs-module-exists ()
   "Check whether the resulting Emacs module library exists."
-  (file-exists-p platel-*platel-emacs-module*))
+  (file-exists-p platel:*platel-emacs-module*))
 
 
 ;; (defvar platel--*msvc-folder*
