@@ -134,7 +134,7 @@ To build and install on Windows just issue:
 </pre>
 
 Of course, this assumes that you have started `cmd` or **Power Shell**
-from the proper [**MSVC**](https://visualstudio.microsoft.com/)
+from the proper [**Visual Studio**](https://visualstudio.microsoft.com/)
 startup item, in order to have the overall Visual Studio environment
 completely setup (which is what `emc` provides for you on Windows).
 
