@@ -12,7 +12,8 @@
 ;; Summary: Low level (C level) PLATform introspection with ELisp.
 ;;
 ;; Created: 2024-02-07
-;; Version: 2025-01-21
+;; Timestamp: 2025-06-06
+;; Version: 0.42
 ;;
 ;; Keywords: languages, operating systems, binary platform.
 
