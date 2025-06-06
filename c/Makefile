@@ -2,8 +2,10 @@
 ###
 ### See the file COPYING in the top directory for copyright and
 ### licensing information.
+###
+### This is a Mac OS file.
 
-EMACS_MOD_PATH = /Applications/Emacs.app/Contents/Resources/include
+EMACS_MOD_PATH = "/Applications/Emacs.app/Contents/Resources/include"
 EMACS_MOD_OBJS = platel_emacs_module.o platel.o
 
 .PHONY: platel_emacs_module_lib
@@ -28,6 +30,6 @@ test: platel_test
 
 .PHONY: clean
 clean:
-	$(RM) $(EMACS_MOD_OBJS) platel_emacs_module.dylib platel_test
+	- $(RM) $(EMACS_MOD_OBJS) platel_emacs_module.dylib platel_test
 
 ### end of file -- Makefile
