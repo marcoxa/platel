@@ -31,6 +31,8 @@ EMACS_MOD_EXPS = $(EMACS_MOD_SRCS:.c=.exp)
 EMACS_MOD_DLL  = platel_emacs_module.dll
 
 
+### Various macros.
+
 ### $(CC) is 'cl'.
 
 CFLAGS=/TC /nologo
