@@ -166,13 +166,13 @@ Invoking the following will clean up the installation.
 ### Running `platel`
 
 If you have `load`ed the `platel_emacs_module` in your Emacs session,
-now you can issue the command `platel:endianness`.  On an Intel
+now you can issue the command `platel-endianness`.  On an Intel
 machine you will see the following message in the minibuffer.
 ```
     PLATEL: platform is little endian.
 ```
 
-The functions `platel:is-big-endian` and `platel:is-little-endian`
+The functions `platel-is-big-endian` and `platel-is-little-endian`
 will also be available for ELisp programming.
 
 
