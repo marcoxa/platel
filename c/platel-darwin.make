@@ -20,8 +20,9 @@
 ## EMACS_MOD_LOAD_PATH is the "installation" folder, which in this
 ## case just the main, top 'platel' folder, preparing for 'm?elpa'
 
-
-EMACS_VERSION  = 30.1
+EMACS = emacs
+### EMACS_VERSION  = 30.1
+EMACS_VERSION  = $(shell $(EMACS) -Q --batch --eval='(princ emacs-version)')
 ### EMACS_VERSION_DIR =
 EMACS_MOD_INCLUDE = "/Applications/Emacs.app/Contents/Resources/include"
 EMACS_MOD_LOAD_PATH = "../"
@@ -52,6 +53,7 @@ all: start $(EMACS_MOD_DLL)
 start:
 	@echo platel make: 'platel' building started.
 	@echo platel make: MAKEDIR = $(MAKEDDIR)
+	@echo platel make: EMACS   = $(EMACS) $(EMACS_VERSION)
 	@echo
 
 

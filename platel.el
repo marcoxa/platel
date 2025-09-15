@@ -1,5 +1,5 @@
-;;; -*- Mode: Emacs-Lisp; lexical-binding: t; -*-
-;;; platel --- Low level (C level) PLATform introspection with ELisp.
+;;; platel --- Low level (C level) PLATform introspection with ELisp -*- Mode: Emacs-Lisp; lexical-binding: t; -*-
+
 
 ;;; platel.el
 ;;;
