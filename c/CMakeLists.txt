@@ -46,7 +46,12 @@ target_include_directories(platel_emacs_module
 ### Installation instructions.
 ### Installing in the top directory, i.e., PROJECT_SOURCE_DIR.
 
-install(TARGETS platel_emacs_module DESTINATION ${PROJECT_SOURCE_DIR})
+install(TARGETS platel_emacs_module
+  DESTINATION ${PROJECT_SOURCE_DIR}
+  CONFIGURATIONS Debug
+  RUNTIME COMPONENT Runtime
+  LIBRARY COMPONENT Runtime NAMELINK_COMPONENT Development
+)
 
 
 ### Epilogue.
@@ -54,6 +59,8 @@ install(TARGETS platel_emacs_module DESTINATION ${PROJECT_SOURCE_DIR})
 message(STATUS "C PROJECT_BINARY_DIR   = ${PROJECT_BINARY_DIR}")
 message(STATUS "C PROJECT_SOURCE_DIR/c = ${PROJECT_SOURCE_DIR}/c")
 message(STATUS "C EMACS_MODULE_INCLUDE_DIR = ${EMACS_MODULE_INCLUDE_DIR}")
+message(STATUS "INSTALL BIN DIR = ${CMAKE_INSTALL_BINDIR}")
+message(STATUS "INSTALL LIB DIR = ${CMAKE_INSTALL_LIBDIR}")
 message(STATUS "")
 
 ### CMakeLists.txt ends here
