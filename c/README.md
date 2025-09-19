@@ -32,9 +32,21 @@ file.
 
 While working with `platel` several ideas percolated to the library `emc`.
 
-Now you can call `emc:make` to build the system and `emc:install` to
+Now you can call `emc-make` to build the system and `emc-install` to
 install it.  Eventually, you will be able to choose between build
 systems, e.g., `cmake` instead of the vanilla `Makefile` based setup.
+
+
+## Issues
+
+The code is convoluted mainly because of two issues.
+
+1. Emacs does not expose anything like `emacs-includes-dir`, therefore
+   guessing the location of `include` directory in the Emacs
+   installation cannot be programmatically done in a reliable way.
+2. Windows `nmake` is much more limited than UN*X `make` in all its
+   variants; e.g., it does not have the equivalent of `$(shell ...)`,
+   which makes `platel.nmake` rather rigid.
 
 
 # Acknowledgements
