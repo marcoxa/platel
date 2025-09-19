@@ -8,6 +8,7 @@
 *.exp
 *.so
 tmp/*
+c/tmp/*
 
 platel_test
 platel_build/*
