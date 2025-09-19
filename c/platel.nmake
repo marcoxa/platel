@@ -9,26 +9,35 @@
 
 
 ## Environment setup.
-## 'nmake' is rahter limited in its treatment of variables, therefore
+## 'nmake' is rather limited in its treatment of variables, therefore
 ## I assume that some of the following macros (e.g., EMACS_VERSION)
-## will be defined at 'namke' invocation time.
+## will be defined at 'nmake' invocation time.
 
 ## The following should be self-explanatory.
 ## EMACS_MOD_LOAD_PATH is the "installation" folder, which in this
 ## case just the main, top 'platel' folder, preparing for 'm?elpa'
 
-EMACS_VERSION = 29.2
+
+### Emacs and ELisp macros.
+
+EMACS = emacs
+
+EMACS_VERSION = 30.1
 EMACS_VERSION_DIR = "emacs-$(EMACS_VERSION)"
 EMACS_MOD_INCLUDE = "C:\\Program Files\\Emacs\\$(EMACS_VERSION_DIR)\\include\\"
-EMACS_MOD_LOAD_PATH = "..\\"
 
-EMACS_MOD_SRCS = platel_emacs_module.c platel.c
-EMACS_MOD_HDRS = platel_emacs_module.h platel.h
-EMACS_MOD_DEFS = platel_emacs_module.def
-EMACS_MOD_OBJS = $(EMACS_MOD_SRCS:.c=.obj)
-EMACS_MOD_LIBS = $(EMACS_MOD_SRCS:.c=.lib)
-EMACS_MOD_EXPS = $(EMACS_MOD_SRCS:.c=.exp)
-EMACS_MOD_DLL  = platel_emacs_module.dll
+
+### Source, object and library macros.
+
+PLATEL_SRCS = platel_emacs_module.c platel.c
+PLATEL_HDRS = $(PLATEL_SRCS:.c=.h)
+PLATEL_DEFS = platel_emacs_module.def
+PLATEL_OBJS = $(PLATEL_SRCS:.c=.obj)
+PLATEL_LIBS = $(PLATEL_SRCS:.c=.lib)
+PLATEL_EXPS = $(PLATEL_SRCS:.c=.exp)
+PLATEL_MOD_DLL  = platel_emacs_module.dll
+PLATEL_MOD_LOAD_PATH = "..\\"
+
 
 
 ### Various macros.
@@ -47,7 +56,7 @@ MOVE = ren
 
 ### Targets.
 
-all: start $(EMACS_MOD_DLL)
+all: start $(PLATEL_MOD_DLL)
 	@echo platel make: 'platel' building done.
 	@echo.
 
@@ -58,12 +67,12 @@ start:
 	@echo.
 
 
-$(EMACS_MOD_DLL): $(EMACS_MOD_OBJS) $(EMACS_MOD_DEFS)
+$(PLATEL_MOD_DLL): $(PLATEL_OBJS) $(PLATEL_DEFS)
 	$(CC) /nologo \
-              /LD $(EMACS_MOD_OBJS) $(EMACS_MOD_DEFS) \
-              /DLL:$(EMACS_MOD_DLL) \
+              /LD $(PLATEL_OBJS) $(PLATEL_DEFS) \
+              /DLL:$(PLATEL_MOD_DLL) \
               /link \
-                /OUT:$(EMACS_MOD_DLL)
+                /OUT:$(PLATEL_MOD_DLL)
 
 
 platel.obj: platel.h platel.c
@@ -76,30 +85,36 @@ platel_emacs_module.obj: platel.h platel_emacs_module.c
 
 ### 'cl' produces 'platel_test.exe' directly.
 
-platel_test: platel_test.c platel.obj
+platel_test.exe: platel_test.c platel.obj
 	$(CC) $(CFLAGS) platel_test.c /link platel.obj
 
 
-test: platel_test
+.PHONY: test
+test: platel_test.exe
 
 
-install: $(EMACS_MOD_DLL)
-	- $(COPY) /y $(EMACS_MOD_DLL) $(EMACS_MOD_LOAD_PATH)
-	@echo platel make: $(EMACS_MOD_DLL) installed in $(EMACS_MOD_LOAD_PATH).
+install: $(PLATEL_MOD_DLL)
+	- $(COPY) /y $(PLATEL_MOD_DLL) $(PLATEL_MOD_LOAD_PATH) /B
+	- $(COPY) /y platel_test.exe $(PLATEL_MOD_LOAD_PATH) /B
+	@echo platel make: $(PLATEL_MOD_DLL) installed in $(PLATEL_MOD_LOAD_PATH).
 	@echo.
 
 
-uninstall: clean
-	- $(RM) $(EMACS_MOD_LOAD_PATH)$(EMACS_MOD_DLL)
+.PHONY: uninstall
+uninstall:
+	- $(RM) $(PLATEL_MOD_LOAD_PATH)$(PLATEL_MOD_DLL)
+	- $(RM) $(PLATEL_MOD_LOAD_PATH)$(PLATEL_LIBS)
+	- $(RM) $(PLATEL_MOD_LOAD_PATH)platel_test.exe
 	@echo platel make: 'platel' cleaned and uninstalled.
 	@echo.
 
 
+.PHONY: clean
 clean:
-	- $(RM) $(EMACS_MOD_OBJS)
-	- $(RM) $(EMACS_MOD_EXPS)
-	- $(RM) $(EMACS_MOD_LIBS)
-	- $(RM) $(EMACS_MOD_DLL)
+	- $(RM) $(PLATEL_OBJS)
+	- $(RM) $(PLATEL_EXPS)
+	- $(RM) $(PLATEL_LIBS)
+	- $(RM) $(PLATEL_MOD_DLL)
 	- $(RM) platel_test.exe platel_test.obj
 
 ### end of file -- platel.nmake

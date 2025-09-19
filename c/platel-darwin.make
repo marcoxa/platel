@@ -20,12 +20,25 @@
 ## EMACS_MOD_LOAD_PATH is the "installation" folder, which in this
 ## case just the main, top 'platel' folder, preparing for 'm?elpa'
 
+
+### Emacs and ELisp macros.
+###
+### Decent defaults using ELisp 'invocation-directory'.
+
 EMACS = emacs
-### EMACS_VERSION  = 30.1
-EMACS_VERSION  = $(shell $(EMACS) -Q --batch --eval='(princ emacs-version)')
-### EMACS_VERSION_DIR =
-EMACS_MOD_INCLUDE = "/Applications/Emacs.app/Contents/Resources/include"
-EMACS_MOD_LOAD_PATH = "../"
+EMACS_BATCH_EVAL = $(EMACS) -Q --batch --eval=
+
+ELISP_INCLUDE = \
+(file-name-as-directory \
+ (expand-file-name "include" \
+                   (file-name-parent-directory invocation-directory)))
+
+EMACS_VERSION  = $(shell $(EMACS_BATCH_EVAL)'(princ emacs-version)')
+
+EMACS_MOD_INCLUDE = $(shell $(EMACS_BATCH_EVAL)'(princ $(ELISP_INCLUDE))')
+
+
+### Source, object and library macros.
 
 EMACS_MOD_SRCS = platel_emacs_module.c platel.c
 EMACS_MOD_HDRS = platel_emacs_module.h platel.h
@@ -34,8 +47,10 @@ EMACS_MOD_OBJS = $(EMACS_MOD_SRCS:.c=.o)
 ### EMACS_MOD_LIBS = $(EMACS_MOD_SRCS:.c=.lib)
 ### EMACS_MOD_EXPS = $(EMACS_MOD_SRCS:.c=.exp)
 EMACS_MOD_DLL  = platel_emacs_module.dylib
+EMACS_MOD_LOAD_PATH = "../"
 
 EMACS_MOD_LIB  = ..
+
 
 ### Various macros.
 
@@ -52,7 +67,7 @@ all: start $(EMACS_MOD_DLL)
 
 start:
 	@echo platel make: 'platel' building started.
-	@echo platel make: MAKEDIR = $(MAKEDDIR)
+	@echo platel make: MAKEDIR = $(MAKEDIR)
 	@echo platel make: EMACS   = $(EMACS) $(EMACS_VERSION)
 	@echo
 
