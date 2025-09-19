@@ -68,8 +68,20 @@
 (require 'emc)
 
 
-(defvar platel-path (file-name-directory (or load-file-name "."))
+(defvar platel-path (file-name-directory (or load-file-name "./"))
   "The location PLATEL is loaded from.")
+
+
+(defvar platel--emacs-module-include-dir
+  (file-name-as-directory
+   (expand-file-name "include"
+                     (file-name-parent-directory
+                      invocation-directory)))
+  ;; 'invocation-directory' is standard.
+  "The Emacs installation 'include' directory.
+
+This is where, if Emacs has been installed in a non-funky way, the
+'emacs-module.h' file resides.")
 
 
 ;; Unused FTTB.
@@ -113,11 +125,11 @@
 ;; 			)
 ;; 		       )
 ;; 		  (if (zerop exit-code)
-;; 		      (message "PLATEL- build succeded.")
+;; 		      (message "PLATEL: build succeded.")
 ;; 		    ;; The rest is somewhat lifted from 'emacs-libpq'.
 ;; 		    (let ((result-msg (buffer-string)))
 ;; 		      (if noninteractive
-;; 			  (message "PLATEL- build failed:\n%s\n"
+;; 			  (message "PLATEL: build failed:\n%s\n"
 ;; 				   result-msg)
 ;; 			(with-current-buffer
 ;; 			    (get-buffer-create "*platel-compile*")
@@ -129,7 +141,7 @@
 ;; 			    (insert result-msg))
 ;; 			  (compilation-mode)
 ;; 			  (pop-to-buffer (current-buffer))
-;; 			  (error "PLATEL- build failed")))
+;; 			  (error "PLATEL: build failed")))
 ;; 		      ))))
 ;; 	      )				; do-compile
 ;; 	    )				; cl-flet
@@ -138,7 +150,7 @@
 ;; 	(cl-case system-type
 ;; 	  (windows-nt
 ;; 	   (message
-;; 	    "PLATEL- building the platel Emacs module (Windows).")
+;; 	    "PLATEL: building the platel Emacs module (Windows).")
 ;; 	   (do-compile (concat "nmake /F platel.nmake "
 ;; 			       "EMACS_VERSION_DIR="
 ;; 			       emacs-dir
@@ -147,13 +159,13 @@
 	   
 ;; 	  (darwin
 ;; 	   (message
-;; 	    "PLATEL- building the platel Emacs module (Mac OS X - Darwin).")
+;; 	    "PLATEL: building the platel Emacs module (Mac OS X - Darwin).")
 ;; 	   (do-compile "make -f platel-darwin.make")
 ;; 	   )
 	
 ;; 	  (t
 ;; 	   (message
-;; 	    "PLATEL- building the platel Emacs module (vanilla Unix/Linux).")
+;; 	    "PLATEL: building the platel Emacs module (vanilla Unix/Linux).")
 ;; 	   (do-compile (concat "make -f platel.make "
 ;; 			       "EMACS_VERSION_DIR="
 ;; 			       emacs-dir
@@ -189,12 +201,12 @@ Emacs module is forcibly rebuilt."
 	 )
     (if (platel--emacs-module-exists)
 	(when force
-	  (emc:make :build-dir "c"
+	  (emc-make :build-dir "c"
 		    :makefile (platel--select-makefile)
 		    :targets "clean all"
 		    :make-macros make-evd-macro
 		    :wait t))
-      (emc:make :build-dir "c"
+      (emc-make :build-dir "c"
 		:makefile (platel--select-makefile)
 		:make-macros make-evd-macro
 		:wait t))
@@ -217,8 +229,8 @@ Emacs module is forcibly rebuilt."
   "Show a message saying whether the current platform is little or big endian."
   (interactive)
   (if (platel-is-little-endian)
-      (message "PLATEL- platform is little endian.")
-    (message "PLATEL- platform is big endian.")
+      (message "PLATEL: platform is little endian.")
+    (message "PLATEL: platform is big endian.")
     ))
 
 
@@ -241,7 +253,9 @@ Emacs module is forcibly rebuilt."
   (platel-build-emacs-module)
   )
 
-(load platel-*platel-emacs-module*)
+;; (load platel-*platel-emacs-module* nil nil)
+(message "PLATEL: loading module %s" platel-*platel-emacs-module*)
+(module-load platel-*platel-emacs-module*)
 
     
 ;;; Attic.
