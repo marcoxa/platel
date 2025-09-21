@@ -73,15 +73,41 @@
 
 
 (defvar platel--emacs-module-include-dir
-  (file-name-as-directory
-   (expand-file-name "include"
-                     (file-name-parent-directory
-                      invocation-directory)))
+  (if (eq system-type 'darwin)
+      (let ((resource-dir
+	     (file-name-as-directory
+	      (expand-file-name
+	       "Resources"
+	       (file-name-parent-directory
+		invocation-directory)))
+	     ))
+	(file-name-as-directory
+	 (expand-file-name "include" resource-dir)))
+  
+    (file-name-as-directory
+     (expand-file-name "include"
+                       (file-name-parent-directory
+			invocation-directory))))
+  
   ;; 'invocation-directory' is standard.
-  "The Emacs installation 'include' directory.
+  "The Emacs installation \\='include\\=' directory.
 
 This is where, if Emacs has been installed in a non-funky way, the
-'emacs-module.h' file resides.")
+\\='emacs-module.h\\=' file resides.
+
+The guessing is based on `invocation-directory'.  On W11 and
+UN*X/Linux things are straightforward.  On Mac OS, it is really
+guessing, as Emacs may or may not have been installed as \"Emacs.app\"
+under \"/Applications/\".
+
+
+Notes:
+
+The Emacs developer crowd is sometimes rather obtuse on really minor
+things.  Having Emacs export a `dyn-module-include-dir' or something
+like that would really make life much easier; alas, the response has
+been \"you should install Emacs in a non-funky way\", which is ok, but
+what about the \"free\" in \"free-not-as-in-beer\"?")
 
 
 ;; Unused FTTB.
@@ -107,75 +133,6 @@ This is where, if Emacs has been installed in a non-funky way, the
   (file-exists-p platel-*platel-emacs-module*))
 
 
-;; (defvar platel--*msvc-folder*
-;;   "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\"
-;;   "The Microsoft Visual Studio 2022 Community standard location."
-;;   )
-
-
-;; (defun platel--build-emacs-module ()
-;;   "Build the `platel' Emacs module in a platform dependent way."
-;;   (cl-flet ((do-compile (make-cmd)
-;; 	      (with-temp-buffer
-;; 		(let* ((default-directory platel-*platel-c-src-dir*)
-;; 		       (exit-code
-;; 			(call-process-shell-command make-cmd
-;; 						    nil
-;; 						    t)
-;; 			)
-;; 		       )
-;; 		  (if (zerop exit-code)
-;; 		      (message "PLATEL: build succeded.")
-;; 		    ;; The rest is somewhat lifted from 'emacs-libpq'.
-;; 		    (let ((result-msg (buffer-string)))
-;; 		      (if noninteractive
-;; 			  (message "PLATEL: build failed:\n%s\n"
-;; 				   result-msg)
-;; 			(with-current-buffer
-;; 			    (get-buffer-create "*platel-compile*")
-;; 			  (let ((default-directory
-;; 				 platel-*platel-c-src-dir*)
-;; 				(inhibit-read-only t)
-;; 				)
-;; 			    (erase-buffer)
-;; 			    (insert result-msg))
-;; 			  (compilation-mode)
-;; 			  (pop-to-buffer (current-buffer))
-;; 			  (error "PLATEL: build failed")))
-;; 		      ))))
-;; 	      )				; do-compile
-;; 	    )				; cl-flet
-;;     (let ((emacs-dir (concat "emacs-" (platel--emacs-version))))
-;;       (unless (platel--emacs-module-exists)
-;; 	(cl-case system-type
-;; 	  (windows-nt
-;; 	   (message
-;; 	    "PLATEL: building the platel Emacs module (Windows).")
-;; 	   (do-compile (concat "nmake /F platel.nmake "
-;; 			       "EMACS_VERSION_DIR="
-;; 			       emacs-dir
-;; 			       ))
-;; 	   )
-	   
-;; 	  (darwin
-;; 	   (message
-;; 	    "PLATEL: building the platel Emacs module (Mac OS X - Darwin).")
-;; 	   (do-compile "make -f platel-darwin.make")
-;; 	   )
-	
-;; 	  (t
-;; 	   (message
-;; 	    "PLATEL: building the platel Emacs module (vanilla Unix/Linux).")
-;; 	   (do-compile (concat "make -f platel.make "
-;; 			       "EMACS_VERSION_DIR="
-;; 			       emacs-dir
-;; 			       ))
-;; 	   )
-;; 	  )))
-;;     )				; cl-flet
-;;   )
-
-
 (defvar platel--*system-dependent-makefiles*
   '((windows-nt . "platel.nmake")
     (darwin     . "platel-darwin.make")
@@ -196,19 +153,30 @@ This is where, if Emacs has been installed in a non-funky way, the
 The function checks whether the \\='platel\\=' Emacs module exists
 and, if not, builds it (using \\='emc\\='.  If FORCE is non-nil the
 Emacs module is forcibly rebuilt."
+
+  (unless (file-exists-p platel--emacs-module-include-dir)
+    (error "PLATEL: Error: Emacs \"include\" directory not found, %S"
+	   platel--emacs-module-include-dir))
+  
   (let* ((emacs-dir (concat "emacs-" emacs-version))
 	 (make-evd-macro (format "EMACS_VERSION_DIR=%S" emacs-dir))
+	 (make-emid-macro
+	  (format "EMACS_MOD_INCLUDE=%S"
+		  platel--emacs-module-include-dir))
+	 (make-macros (format "%s %s"
+			      make-evd-macro
+			      make-emid-macro))
 	 )
     (if (platel--emacs-module-exists)
 	(when force
 	  (emc-make :build-dir "c"
 		    :makefile (platel--select-makefile)
 		    :targets "clean all"
-		    :make-macros make-evd-macro
+		    :make-macros make-macros
 		    :wait t))
       (emc-make :build-dir "c"
 		:makefile (platel--select-makefile)
-		:make-macros make-evd-macro
+		:make-macros make-macros
 		:wait t))
     ))
 
@@ -249,13 +217,14 @@ Emacs module is forcibly rebuilt."
 ;;     ))
 
 
-(unless (fboundp 'platel-is-little-endian)
+(unless (and (fboundp 'platel-is-little-endian)
+	     (file-exists-p platel-*platel-emacs-module*))
   (platel-build-emacs-module)
   )
 
 ;; (load platel-*platel-emacs-module* nil nil)
 (message "PLATEL: loading module %s" platel-*platel-emacs-module*)
-(module-load platel-*platel-emacs-module*)
+(load platel-*platel-emacs-module* nil nil)
 
     
 ;;; Attic.
