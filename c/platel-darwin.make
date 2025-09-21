@@ -35,7 +35,9 @@ ELISP_INCLUDE = \
 
 EMACS_VERSION  = $(shell $(EMACS_BATCH_EVAL)'(princ emacs-version)')
 
-EMACS_MOD_INCLUDE = $(shell $(EMACS_BATCH_EVAL)'(princ $(ELISP_INCLUDE))')
+# EMACS_MOD_INCLUDE = $(shell $(EMACS_BATCH_EVAL)'(princ $(ELISP_INCLUDE))')
+
+EMACS_MOD_INCLUDE = /Applications/Emacs.app/Contents/Resources/include
 
 
 ### Source, object and library macros.
