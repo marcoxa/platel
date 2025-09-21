@@ -69,10 +69,10 @@ emacs_module_init(struct emacs_runtime * er) {
       er->get_environment(er);
   
     emacs_value is_be_symbol =
-      eenv->intern(eenv, "platel:is-big-endian");
+      eenv->intern(eenv, "platel-is-big-endian");
   
     emacs_value is_le_symbol =
-      eenv->intern(eenv, "platel:is-little-endian");
+      eenv->intern(eenv, "platel-is-little-endian");
     
     emacs_value is_be_func =
       eenv->make_function(eenv, 0, 0, platel_e_is_big_endian,
