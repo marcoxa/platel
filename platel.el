@@ -12,7 +12,7 @@
 ;; Summary: Low level (C level) PLATform introspection with ELisp.
 ;;
 ;; Created: 2024-02-07
-;; Timestamp: 2025-09-21
+;; Timestamp: 2025-09-22
 ;; Version: 0.42
 ;;
 ;; Keywords: languages, operating systems, binary platform.
@@ -224,7 +224,12 @@ Emacs module is forcibly rebuilt."
 
 ;; (load platel-*platel-emacs-module* nil nil)
 (message "PLATEL: loading module %s" platel-*platel-emacs-module*)
-(load platel-*platel-emacs-module* nil nil)
+(if (file-exists-p platel-*platel-emacs-module*)
+    (load platel-*platel-emacs-module* nil nil)
+  (error (concat "PLATEL: Error: cannot find emacs module %S"
+                 "\nPLATEL: Error: build process went probably awry;"
+                 "check and retry.")
+         platel-*platel-emacs-module*))
 
     
 ;;; Attic.
