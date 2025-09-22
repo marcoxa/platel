@@ -95,6 +95,8 @@ test: platel_test.exe
 
 install: $(PLATEL_MOD_DLL)
 	- $(COPY) /y $(PLATEL_MOD_DLL) $(PLATEL_MOD_LOAD_PATH) /B
+	- $(COPY) /y platel_emacs_module.lib $(PLATEL_MOD_LOAD_PATH) /B
+	- $(COPY) /y platel.lib $(PLATEL_MOD_LOAD_PATH) /B
 	- $(COPY) /y platel_test.exe $(PLATEL_MOD_LOAD_PATH) /B
 	@echo platel make: $(PLATEL_MOD_DLL) installed in $(PLATEL_MOD_LOAD_PATH).
 	@echo.
