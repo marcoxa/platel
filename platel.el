@@ -12,7 +12,7 @@
 ;; Summary: Low level (C level) PLATform introspection with ELisp.
 ;;
 ;; Created: 2024-02-07
-;; Timestamp: 2025-09-22
+;; Timestamp: 2025-10-01
 ;; Version: 0.42
 ;;
 ;; Keywords: languages, operating systems, binary platform.
@@ -159,25 +159,40 @@ Emacs module is forcibly rebuilt."
 	   platel--emacs-module-include-dir))
   
   (let* ((emacs-dir (concat "emacs-" emacs-version))
-	 (make-evd-macro (format "EMACS_VERSION_DIR=%S" emacs-dir))
+	 ;; (make-evd-macro (format "EMACS_VERSION_DIR=%s" emacs-dir))
+	 ;; (make-emid-macro
+	 ;;  (format "EMACS_MOD_INCLUDE=%S"
+	 ;;          platel--emacs-module-include-dir))
+	 ;; (make-macros (format "%s %s"
+	 ;;        	      make-evd-macro
+	 ;;        	      make-emid-macro))
+
+         (make-evd-macro
+          (list "EMACS_VERSION_DIR"
+                (shell-quote-argument emacs-dir)))
 	 (make-emid-macro
-	  (format "EMACS_MOD_INCLUDE=%S"
-		  platel--emacs-module-include-dir))
-	 (make-macros (format "%s %s"
-			      make-evd-macro
-			      make-emid-macro))
+	  (list "EMACS_MOD_INCLUDE"
+		(shell-quote-argument platel--emacs-module-include-dir)))
+	 (make-macros (list make-evd-macro make-emid-macro))
+         (emc-*logging* t)
+         
 	 )
+    (message "platel: make-macros %s" make-macros)
     (if (platel--emacs-module-exists)
 	(when force
 	  (emc-make :build-dir "c"
 		    :makefile (platel--select-makefile)
 		    :targets "clean all"
 		    :make-macros make-macros
-		    :wait t))
+                    ;; :make-flags " /P "
+		    :wait t
+                    ))
       (emc-make :build-dir "c"
 		:makefile (platel--select-makefile)
 		:make-macros make-macros
-		:wait t))
+                ;; :make-flags " /P "
+		:wait t
+                ))
     ))
 
 
