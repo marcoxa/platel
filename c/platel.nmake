@@ -64,6 +64,8 @@ all: start $(PLATEL_MOD_DLL)
 start:
 	@echo platel make: 'platel' building started...
 	@echo platel make: MAKEDIR = $(MAKEDIR)
+	@echo platel make: EMACS_MOD_INCLUDE = $(EMACS_MOD_INCLUDE)
+	@echo.
 	@echo.
 
 
