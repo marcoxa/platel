@@ -173,7 +173,8 @@ Emacs module is forcibly rebuilt."
 	 (make-emid-macro
 	  (list "EMACS_MOD_INCLUDE"
 		(shell-quote-argument platel--emacs-module-include-dir)))
-	 (make-macros (list make-evd-macro make-emid-macro))
+	 ;; (make-macros (list make-evd-macro make-emid-macro))
+	 (make-macros (append make-evd-macro make-emid-macro))
          (emc-*logging* t)
          
 	 )
